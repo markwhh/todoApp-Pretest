@@ -197,7 +197,7 @@ export default function App() {
                   </div>
 
                   <span
-                    className={`flex-1 text-sm transition ${
+                    className={`flex-1 min-w-0 break-words text-sm transition ${
                       task.completed ? 'line-through text-gray-400' : 'text-gray-800'
                     }`}
                   >
