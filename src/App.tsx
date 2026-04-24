@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Plus, ClipboardList } from 'lucide-react';
+import { Plus, ClipboardList, Trash2, Check } from 'lucide-react';
 
 interface Task {
   id: number;
   text: string;
+  completed: boolean;
 }
 
 export default function App() {
@@ -13,8 +14,18 @@ export default function App() {
   function handleAdd() {
     const trimmed = input.trim();
     if (!trimmed) return;
-    setTasks((prev) => [...prev, { id: Date.now(), text: trimmed }]);
+    setTasks((prev) => [...prev, { id: Date.now(), text: trimmed, completed: false }]);
     setInput('');
+  }
+
+  function handleToggle(id: number) {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+    );
+  }
+
+  function handleDelete(id: number) {
+    setTasks((prev) => prev.filter((t) => t.id !== id));
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -66,10 +77,31 @@ export default function App() {
             tasks.map((task) => (
               <div
                 key={task.id}
-                className="flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-gray-100 shadow-sm"
+                className="flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-gray-100 shadow-sm group"
               >
-                <div className="w-4 h-4 rounded-full border-2 border-gray-300 shrink-0" />
-                <span className="text-sm text-gray-800">{task.text}</span>
+                <button
+                  onClick={() => handleToggle(task.id)}
+                  className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center transition ${
+                    task.completed
+                      ? 'bg-blue-600 border-blue-600'
+                      : 'border-gray-300 hover:border-blue-400'
+                  }`}
+                >
+                  {task.completed && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+                </button>
+                <span
+                  className={`flex-1 text-sm transition ${
+                    task.completed ? 'line-through text-gray-400' : 'text-gray-800'
+                  }`}
+                >
+                  {task.text}
+                </span>
+                <button
+                  onClick={() => handleDelete(task.id)}
+                  className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             ))
           )}
