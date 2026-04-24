@@ -83,66 +83,69 @@ export default function App() {
           </p>
         </div>
 
-        {/* Input area */}
-        <div className="flex gap-2 mb-3">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Add a new task..."
-            className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-          />
-          <button
-            onClick={handleAdd}
-            disabled={!input.trim()}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-medium shadow-sm hover:bg-blue-700 active:bg-blue-800 disabled:opacity-40 disabled:cursor-not-allowed transition"
-          >
-            <Plus className="w-4 h-4" />
-            Add
-          </button>
-        </div>
-
-        {/* Tag selector for new task */}
-        <div className="flex items-center gap-2 mb-6 flex-wrap">
-          <TagIcon className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-          <button
-            onClick={() => setSelectedTagId(null)}
-            className={`px-2.5 py-1 rounded-lg text-xs font-medium transition ${
-              selectedTagId === null
-                ? 'bg-gray-200 text-gray-700'
-                : 'text-gray-400 hover:bg-gray-100'
-            }`}
-          >
-            No tag
-          </button>
-          {tags.map((tag) => (
+        {/* Add task card */}
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm mb-4 overflow-hidden">
+          <div className="flex gap-2 p-3">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Add a new task..."
+              className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition"
+            />
             <button
-              key={tag.id}
-              onClick={() => setSelectedTagId(tag.id)}
-              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition border ${
-                selectedTagId === tag.id ? 'opacity-100' : 'opacity-60 hover:opacity-80'
-              }`}
-              style={
-                selectedTagId === tag.id
-                  ? { backgroundColor: tag.color + '22', borderColor: tag.color, color: tag.color }
-                  : { backgroundColor: 'transparent', borderColor: tag.color + '60', color: tag.color }
-              }
+              onClick={handleAdd}
+              disabled={!input.trim()}
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-medium shadow-sm hover:bg-blue-700 active:bg-blue-800 disabled:opacity-40 disabled:cursor-not-allowed transition"
             >
-              {tag.name}
+              <Plus className="w-4 h-4" />
+              Add
             </button>
-          ))}
+          </div>
+
+          {/* Tag selector for new task */}
+          <div className="flex items-center gap-2 px-3 pb-3 flex-wrap">
+            <TagIcon className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+            <span className="text-xs text-gray-400 mr-0.5">Tag:</span>
+            <button
+              onClick={() => setSelectedTagId(null)}
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition ${
+                selectedTagId === null
+                  ? 'bg-gray-200 text-gray-700'
+                  : 'text-gray-400 hover:bg-gray-100'
+              }`}
+            >
+              None
+            </button>
+            {tags.map((tag) => (
+              <button
+                key={tag.id}
+                onClick={() => setSelectedTagId(tag.id)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition border ${
+                  selectedTagId === tag.id ? 'opacity-100' : 'opacity-60 hover:opacity-80'
+                }`}
+                style={
+                  selectedTagId === tag.id
+                    ? { backgroundColor: tag.color + '22', borderColor: tag.color, color: tag.color }
+                    : { backgroundColor: 'transparent', borderColor: tag.color + '60', color: tag.color }
+                }
+              >
+                {tag.name}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Filter bar */}
-        <div className="flex items-center gap-2 mb-4 flex-wrap">
-          <span className="text-xs text-gray-400 font-medium mr-1">Filter:</span>
+        {/* Filter bar — secondary toolbar */}
+        <div className="flex items-center gap-1.5 mb-5 flex-wrap">
+          <span className="text-xs text-gray-400 font-medium mr-1">View:</span>
           <button
             onClick={() => setFilterTagId('all')}
-            className={`px-2.5 py-1 rounded-lg text-xs font-medium transition ${
+            className={`px-2 py-1 rounded-md text-xs font-medium transition ${
               filterTagId === 'all'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-white border border-gray-200 text-gray-500 hover:border-gray-300'
+                ? 'bg-gray-800 text-white'
+                : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
             }`}
           >
             All ({tasks.length})
@@ -151,11 +154,13 @@ export default function App() {
             <button
               key={tag.id}
               onClick={() => setFilterTagId(filterTagId === tag.id ? 'all' : tag.id)}
-              className="px-2.5 py-1 rounded-lg text-xs font-medium transition border"
+              className={`px-2 py-1 rounded-md text-xs font-medium transition ${
+                filterTagId === tag.id ? 'opacity-100' : 'opacity-50 hover:opacity-75'
+              }`}
               style={
                 filterTagId === tag.id
-                  ? { backgroundColor: tag.color, borderColor: tag.color, color: '#fff' }
-                  : { backgroundColor: '#fff', borderColor: tag.color + '60', color: tag.color }
+                  ? { backgroundColor: tag.color + '22', color: tag.color }
+                  : { color: tag.color }
               }
             >
               {tag.name} ({tagCounts.get(tag.id) ?? 0})
