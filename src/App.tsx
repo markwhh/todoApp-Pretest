@@ -60,6 +60,7 @@ export default function App() {
 
   // --- derived ---
   const tagMap = new Map(tags.map((t) => [t.id, t]));
+  const tagCounts = new Map(tags.map((t) => [t.id, tasks.filter((task) => task.tagId === t.id).length]));
   const visibleTasks =
     filterTagId === 'all'
       ? tasks
@@ -144,7 +145,7 @@ export default function App() {
                 : 'bg-white border border-gray-200 text-gray-500 hover:border-gray-300'
             }`}
           >
-            All
+            All ({tasks.length})
           </button>
           {tags.map((tag) => (
             <button
@@ -157,7 +158,7 @@ export default function App() {
                   : { backgroundColor: '#fff', borderColor: tag.color + '60', color: tag.color }
               }
             >
-              {tag.name}
+              {tag.name} ({tagCounts.get(tag.id) ?? 0})
             </button>
           ))}
           <button
