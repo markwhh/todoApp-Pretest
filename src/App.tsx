@@ -182,18 +182,19 @@ export default function App() {
               return (
                 <div
                   key={task.id}
-                  className="flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-gray-100 shadow-sm group"
+                  onClick={() => handleToggle(task.id)}
+                  className="flex items-center gap-3 px-4 py-3.5 bg-white rounded-xl border border-gray-100 shadow-sm group cursor-pointer select-none hover:bg-gray-50 active:bg-gray-100 transition-colors"
                 >
-                  <button
-                    onClick={() => handleToggle(task.id)}
-                    className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center transition ${
+                  <div
+                    onClick={(e) => { e.stopPropagation(); handleToggle(task.id); }}
+                    className={`w-6 h-6 rounded-full border-2 shrink-0 flex items-center justify-center transition ${
                       task.completed
                         ? 'bg-blue-600 border-blue-600'
                         : 'border-gray-300 hover:border-blue-400'
                     }`}
                   >
-                    {task.completed && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
-                  </button>
+                    {task.completed && <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />}
+                  </div>
 
                   <span
                     className={`flex-1 text-sm transition ${
@@ -205,6 +206,7 @@ export default function App() {
 
                   {tag && (
                     <span
+                      onClick={(e) => e.stopPropagation()}
                       className="shrink-0 px-2 py-0.5 rounded-md text-xs font-medium"
                       style={{ backgroundColor: tag.color + '1a', color: tag.color }}
                     >
@@ -213,8 +215,8 @@ export default function App() {
                   )}
 
                   <button
-                    onClick={() => handleDelete(task.id)}
-                    className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition"
+                    onClick={(e) => { e.stopPropagation(); handleDelete(task.id); }}
+                    className="opacity-0 group-hover:opacity-100 p-1.5 -mr-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 active:bg-red-100 transition"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
