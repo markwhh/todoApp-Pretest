@@ -70,14 +70,14 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center px-4 py-16">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md md:w-3/5 md:max-w-none">
 
         {/* Header */}
         <div className="mb-8 text-center">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-600 mb-4">
             <ClipboardList className="w-6 h-6 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">My Tasks</h1>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">My todo list</h1>
           <p className="mt-1 text-sm text-gray-500">
             {tasks.length === 0 ? 'No tasks yet' : `${tasks.length} task${tasks.length === 1 ? '' : 's'}`}
           </p>
