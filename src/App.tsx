@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, ClipboardList, Trash2, Check, Tag as TagIcon, Settings2 } from 'lucide-react';
 import { Tag, Task } from './types';
 import TagManager from './TagManager';
@@ -11,13 +11,38 @@ const DEFAULT_TAGS: Tag[] = [
 ];
 
 export default function App() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [tags, setTags] = useState<Tag[]>(DEFAULT_TAGS);
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    try {
+      const saved = localStorage.getItem('todo_tasks');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [tags, setTags] = useState<Tag[]>(() => {
+    try {
+      const saved = localStorage.getItem('todo_tags');
+      return saved ? JSON.parse(saved) : DEFAULT_TAGS;
+    } catch {
+      return DEFAULT_TAGS;
+    }
+  });
   const [input, setInput] = useState('');
   const [selectedTagId, setSelectedTagId] = useState<number | null>(null);
   const [filterTagId, setFilterTagId] = useState<number | null | 'all'>('all');
   const [showTagManager, setShowTagManager] = useState(false);
-  const [nextTagId, setNextTagId] = useState(100);
+  const [nextTagId, setNextTagId] = useState(() => {
+    try {
+      const saved = localStorage.getItem('todo_next_tag_id');
+      return saved ? JSON.parse(saved) : 100;
+    } catch {
+      return 100;
+    }
+  });
+
+  useEffect(() => { localStorage.setItem('todo_tasks', JSON.stringify(tasks)); }, [tasks]);
+  useEffect(() => { localStorage.setItem('todo_tags', JSON.stringify(tags)); }, [tags]);
+  useEffect(() => { localStorage.setItem('todo_next_tag_id', JSON.stringify(nextTagId)); }, [nextTagId]);
 
   // --- task actions ---
   function handleAdd() {
